@@ -13,7 +13,6 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Platform-Android%2010%2B-3DDC84?logo=android&logoColor=white"/>
   <img src="https://img.shields.io/badge/Language-Java-orange"/>
-  <img src="https://img.shields.io/badge/Model-LightGBM-blue"/>
   <img src="https://img.shields.io/badge/Maps-OpenStreetMap%20(offline)-7EBC6F"/>
   <img src="https://img.shields.io/badge/Internet-Not%20required-lightgrey"/>
   <img src="https://img.shields.io/badge/Median%20drift-%3C10%25%20%40%2030%E2%80%93120%20s-success"/>
