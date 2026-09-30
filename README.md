@@ -5,9 +5,9 @@
 > **Team Maverick · Kumaraguru College of Technology, Coimbatore**
 
 <p align="center">
+  <img src="images/testing.jpeg" width="260" alt="Dead reckoning 1 min 54 s into outage"/>
   <img src="images/reached.jpeg" width="260" alt="Turn-by-turn navigation during GNSS loss"/>
   <img src="images/ride.jpeg" width="260" alt="Dead reckoning 29 s into outage"/>
-  <img src="images/testing.jpeg" width="260" alt="Dead reckoning 1 min 54 s into outage"/>
 </p>
 
 <p align="center">
