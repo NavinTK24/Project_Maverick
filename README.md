@@ -284,14 +284,14 @@ Every drive is saved to `Documents/Maverick/drive_YYYYMMDD_HHMMSS/`:
 
 ## References
 
-1. U. Onyekpe et al., *IO-VNBD: Inertial and Odometry Benchmark Dataset for Ground Vehicle Positioning*, Data in Brief, 2021.
-2. U. Onyekpe et al., *WhONet: Wheel Odometry Neural Network for Vehicular Localisation in GNSS-Deprived Environments*, 2021.
-3. M. Brossard, A. Barrau, S. Bonnabel, *AI-IMU Dead-Reckoning*, IEEE T-IV, 2020.
-4. H. Yan, S. Herath, Y. Furukawa, *RoNIN: Robust Neural Inertial Navigation in the Wild*, ICRA 2020.
-5. P. Newson, J. Krumm, *Hidden Markov Map Matching Through Noise and Sparseness*, ACM SIGSPATIAL, 2009.
-6. P. D. Groves, *Principles of GNSS, Inertial, and Multisensor Integrated Navigation Systems*, 2nd ed., Artech House, 2013.
-7. G. Ke et al., *LightGBM: A Highly Efficient Gradient Boosting Decision Tree*, NeurIPS 2017.
-8. OpenStreetMap contributors — © OpenStreetMap, ODbL.
+1. U. Onyekpe et al., *IO-VNBD: Inertial and Odometry Benchmark Dataset for Ground Vehicle Positioning*, Data in Brief, 2021. [DOI](https://doi.org/10.1016/j.dib.2021.106885) · [arXiv](https://arxiv.org/abs/2005.01701)
+2. U. Onyekpe et al., *WhONet: Wheel Odometry Neural Network for Vehicular Localisation in GNSS-Deprived Environments*, 2021. [DOI](https://doi.org/10.1016/j.engappai.2021.104421) · [arXiv](https://arxiv.org/abs/2104.02581)
+3. M. Brossard, A. Barrau, S. Bonnabel, *AI-IMU Dead-Reckoning*, IEEE T-IV, 2020. [arXiv](https://arxiv.org/abs/1904.06064) · [Code](https://github.com/mbrossar/ai-imu-dr)
+4. H. Yan, S. Herath, Y. Furukawa, *RoNIN: Robust Neural Inertial Navigation in the Wild*, ICRA 2020. [arXiv](https://arxiv.org/abs/1905.12853) · [IEEE Xplore](https://ieeexplore.ieee.org/abstract/document/9196860) · [Project page](https://ronin.cs.sfu.ca/)
+5. P. Newson, J. Krumm, *Hidden Markov Map Matching Through Noise and Sparseness*, ACM SIGSPATIAL, 2009. [DOI](https://doi.org/10.1145/1653771.1653818) · [Microsoft Research](https://www.microsoft.com/en-us/research/publication/hidden-markov-map-matching-noise-sparseness/)
+6. P. D. Groves, *Principles of GNSS, Inertial, and Multisensor Integrated Navigation Systems*, 2nd ed., Artech House, 2013. ISBN 978-1-60807-005-3. [Publisher](https://us.artechhouse.com/Principles-of-GNSS-Inertial-and-Multisensor-Integrated-Navigation-Systems-Second-Edition-P2046.aspx)
+7. G. Ke et al., *LightGBM: A Highly Efficient Gradient Boosting Decision Tree*, NeurIPS 2017. [Paper (PDF)](https://proceedings.neurips.cc/paper/2017/file/6449f44a102fde848669bdd9eb6b76fa-Paper.pdf)
+8. OpenStreetMap contributors — © OpenStreetMap, [ODbL](https://opendatacommons.org/licenses/odbl/). [Copyright and license](https://www.openstreetmap.org/copyright)
 
 ---
 
