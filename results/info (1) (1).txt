@@ -1,0 +1,8 @@
+vehicle=car
+vehicle_name=JUPITER
+vehicle_id=3
+mount=fixed
+device=vivo I2405
+android=16
+sensors_saved=true
+sensor_rate_hz=50

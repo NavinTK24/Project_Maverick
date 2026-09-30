@@ -1,0 +1,26 @@
+# Git
+.git
+.git_backup
+
+# Large packaged files
+*.zip
+*.apk
+*.aab
+
+# Android / Gradle
+.gradle/
+build/
+*/build/
+local.properties
+*.iml
+
+# Python
+__pycache__/
+*.py[cod]
+
+# IDE
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
