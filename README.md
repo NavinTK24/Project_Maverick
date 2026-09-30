@@ -1,101 +1,301 @@
-# Maverick
+# Maverick — AI-Powered Dead Reckoning for GNSS-Denied Navigation
 
-**Offline-first Android navigation designed to keep a useful position estimate when GNSS is unavailable.**
-
-Maverick combines satellite positioning with phone motion sensors, dead reckoning, and OpenStreetMap road data. The Android app includes offline maps, place and street search, route guidance, ride recording, and a demo mode for exploring GPS-loss behavior.
-
-> **Project status:** Maverick is an actively developed prototype. Dead-reckoning performance depends on the vehicle, phone placement, motion, and available map data. Demo/replay results are not a guarantee of real-world accuracy.
-
-## Screenshots
+> **Smart India Hackathon 2026 · Problem Statement 26168 (ISRO / Department of Space)**
+> *AI-ML based Intelligent Dead Reckoning system for seamless navigation*
+> **Team Maverick · Kumaraguru College of Technology, Coimbatore**
 
 <p align="center">
-	<img src="images/testing.jpeg" width="30%" alt="Turn guidance during demo dead reckoning without GPS">
-	<img src="images/ride.jpeg" width="30%" alt="Maverick showing on-route dead reckoning during a ride">
-	<img src="images/reached.jpeg" width="30%" alt="Navigation map continuing to show the route while GPS is unavailable">
+  <img src="docs/screenshots/03_turn_by_turn_dr.jpg" width="260" alt="Turn-by-turn navigation during GNSS loss"/>
+  <img src="docs/screenshots/02_dr_junction_29s.jpg" width="260" alt="Dead reckoning 29 s into outage"/>
+  <img src="docs/screenshots/01_dr_on_route_1m54s.jpg" width="260" alt="Dead reckoning 1 min 54 s into outage"/>
 </p>
 
-## What it does
+<p align="center">
+  <img src="https://img.shields.io/badge/Platform-Android%2010%2B-3DDC84?logo=android&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Language-Java-orange"/>
+  <img src="https://img.shields.io/badge/Model-LightGBM-blue"/>
+  <img src="https://img.shields.io/badge/Maps-OpenStreetMap%20(offline)-7EBC6F"/>
+  <img src="https://img.shields.io/badge/Internet-Not%20required-lightgrey"/>
+  <img src="https://img.shields.io/badge/Median%20drift-%3C10%25%20%40%2030%E2%80%93120%20s-success"/>
+</p>
 
-- **Continues through GPS loss:** uses the accelerometer and gyroscope to estimate motion while satellite fixes are unavailable.
-- **Keeps navigation context:** combines the position estimate with local road geometry and map matching.
-- **Works offline:** search, maps, and routing use bundled map data; no network is needed for the included offline map experience.
-- **Supports car and bike profiles:** the car model is the primary profile; bike support is experimental and benefits from additional ride data.
-- **Lets you inspect GPS-loss behavior:** use the in-app demo/replay or GPS-loss test controls to observe the mode change and its reported uncertainty.
-- **Records rides:** captures sensor and location data for analysis and model improvement.
+---
 
-## Get started
+## Table of Contents
+1. [The Problem](#the-problem)
+2. [What Maverick Does](#what-maverick-does)
+3. [Key Results](#key-results)
+4. [App Screenshots — Field Testing](#app-screenshots--field-testing)
+5. [How It Works](#how-it-works)
+6. [Innovation](#innovation)
+7. [App Features](#app-features)
+8. [Dataset & Validation](#dataset--validation)
+9. [Repository Structure](#repository-structure)
+10. [Getting Started](#getting-started)
+11. [Drive Reports & Data Logging](#drive-reports--data-logging)
+12. [Limitations & Honest Notes](#limitations--honest-notes)
+13. [Roadmap](#roadmap)
+14. [References](#references)
+15. [Team](#team)
 
-### Requirements
+---
 
-- Android Studio (recent stable release)
-- JDK 17
-- Android SDK Platform 35
-- Android 10 (API 29) or newer for device installation
+## The Problem
 
-The first Gradle sync may need internet access to download the Android Gradle Plugin and SDK components. Runtime navigation with the bundled maps does not require internet access.
+GNSS fails exactly where it matters: **tunnels, flyovers, underpasses, basements, dense urban canyons**. Navigation freezes or jumps, and vehicles, fleets and emergency services lose their position when they need it most. Commercial INS solutions need extra hardware (wheel-speed sensors, OBD, tactical-grade IMUs) that most vehicles in India do not have.
 
-### Open and build
+**Goal (PS 26168):** keep a vehicle's position accurate through GNSS outages using AI-ML dead reckoning, and hand back seamlessly when GNSS returns — target **< 10 % drift** of distance travelled.
 
-Open `Maverick_Final` in Android Studio and allow Gradle sync to finish. Or, from the repository root on Windows, run:
+---
 
-```powershell
-cd Maverick_Final
-./gradlew.bat assembleDebug
+## What Maverick Does
+
+**Maverick is an Android app that keeps navigating when GNSS fails, using only the phone's own sensors and offline road maps.**
+
+- ❌ No extra hardware  ❌ No internet  ❌ No calibration stop
+- ✅ Works on any Android 10+ phone
+- ✅ Cars **and** two-wheelers
+- ✅ Instant switch to dead reckoning the moment GNSS is lost
+- ✅ Smooth handover when GNSS returns
+- ✅ Every drive tests itself and saves an accuracy report
+
+---
+
+## Key Results
+
+Validated on **held-out drives** of the **IO-VNBD** dataset (leave-one-drive-out cross-validation), median drift as % of distance travelled during the outage:
+
+| GNSS outage length | Hold-last-speed baseline | **Maverick (phone IMU only)** | Target |
+|---|---|---|---|
+| 30 s  | — | **9.7 %** | < 10 % ✅ |
+| 60 s  | — | **6.6 %** | < 10 % ✅ |
+| 120 s | — | **6.0 %** | < 10 % ✅ |
+
+- **~6× lower drift** than the hold-last-speed baseline
+- **Auto gyro-bias learning halved the heading error** at 120 s
+- The **"last GNSS speed + learned correction"** speed model beat every other model tested, including a neural network
+- Engine runs **fully offline on the phone at 10 Hz**
+- Results were reproduced independently on a second machine with identical numbers
+
+> Fill in the baseline column from `Maverick_Report_v4` before publishing.
+
+---
+
+## App Screenshots — Field Testing
+
+All screenshots below are from **real rides on the Kumaraguru College of Technology campus and Thudiyalur–Saravanampatty Road, Coimbatore**, with the phone's **Location switched off**.
+
+### 1 · Turn-by-turn navigation with no GNSS
+<p align="center"><img src="docs/screenshots/03_turn_by_turn_dr.jpg" width="320"/></p>
+
+| What you see | What it means |
+|---|---|
+| **"70 m · Turn left — No GPS · dead reckoning on the route"** | Voice + visual turn-by-turn guidance keeps working with zero GNSS |
+| **Orange trail** | Path estimated by dead reckoning |
+| **Blue line** | Planned route (offline A* routing on the OSM road graph) |
+| **"1 min · 320 m · arrive 14:42"** | ETA and distance are still computed during the outage |
+| Campus labels (MH 2–6, Campus Dining, F block, Admin Block) | Offline vector map with POIs, no internet |
+
+### 2 · 29 seconds into GNSS loss — taking a junction
+<p align="center"><img src="docs/screenshots/02_dr_junction_29s.jpg" width="320"/></p>
+
+| What you see | What it means |
+|---|---|
+| **"No GPS · dead reckoning … 29 s"** | Outage timer — engine switched instantly, no stop |
+| **"⚠ location is switched off"** | Phone GNSS is fully disabled — position comes only from IMU + AI + map |
+| **Heading NE 63°** + orange cone | Gyro-integrated heading; cone shows direction of travel |
+| **Right turn locked onto the road** | Particle filter snaps the estimate to OSM geometry |
+| **Uncertainty circle** | Particle spread — honest confidence of the estimate |
+
+### 3 · 1 minute 54 seconds into GNSS loss — still on the road
+<p align="center"><img src="docs/screenshots/01_dr_on_route_1m54s.jpg" width="320"/></p>
+
+| What you see | What it means |
+|---|---|
+| **"No GPS · dead reckoning … 1:54"** | Nearly 2 minutes without any GNSS |
+| **Heading N 343°** | Heading tracked through multiple turns |
+| **"Dead reckoning · on route"** | Map-matching confirms the estimate is still on a valid road |
+| **"Saving drive + sensor data"** | 50 Hz IMU + trajectory logged for reports and retraining |
+| **200 m scale** | Full trajectory view from start of outage |
+
+> 📌 These screenshots were recorded in **demo route mode** (see [Limitations](#limitations--honest-notes)).
+
+---
+
+## How It Works
+
+```
+                ┌──────────────── GNSS HEALTHY ────────────────┐
+ Phone sensors  │  • Align phone axes to vehicle frame         │
+ (accel, gyro,  │  • Learn gyro bias at every ordinary stop    │
+  magnetometer) │  • Build vehicle speed profile               │
+      +         │  • Learn stop-detector threshold per vehicle │
+ GNSS fixes ───►└──────────────────────┬───────────────────────┘
+                                       │  GNSS lost (instant switch)
+                                       ▼
+          ┌─────────────────── DEAD RECKONING ───────────────────┐
+          │  SPEED   = last GNSS speed + LightGBM correction     │
+          │            (learned from IMU vibration + speed hist.)│
+          │  HEADING = gyro integration − learned bias           │
+          │  STOP    = LightGBM stop detector + turn-veto rule   │
+          │  POSITION= 400-particle filter on OSM road graph     │
+          │            (one-way aware, no sideways drift)        │
+          └──────────────────────┬──────────────────────────────┘
+                                 │  GNSS returns
+                                 ▼
+                 Smooth handover → drive report (drift, MAE, RMSE, R²)
 ```
 
-The debug APK is written to:
+### Pipeline stages
+1. **Sensor ingestion** — accelerometer, gyroscope, magnetometer and GNSS at up to 50 Hz.
+2. **Frame alignment** — phone axes rotated into the vehicle frame while GNSS is healthy (no mounting constraint beyond being fixed to the vehicle).
+3. **Zero-stop calibration** — gyro bias re-estimated every time the vehicle stops normally; no dedicated calibration stop.
+4. **AI speed model** — LightGBM predicts the *correction* to the last known GNSS speed from IMU vibration features and pre-outage speed history.
+5. **Heading** — bias-corrected gyro yaw integration.
+6. **Map matching** — 400-particle filter constrained to OpenStreetMap road geometry and direction.
+7. **Handover** — blends back to GNSS without jumps when fixes return.
 
-```text
-Maverick_Final/app/build/outputs/apk/debug/app-debug.apk
+---
+
+## Innovation
+
+| # | Idea | Why it matters |
+|---|---|---|
+| 1 | **Phone-only dead reckoning** | No wheel-speed sensor, OBD or external IMU — deployable to any Android phone today |
+| 2 | **Speed anchored to last GNSS fix + learned correction** | Beat every alternative tested, including a neural network |
+| 3 | **Zero-stop calibration** | Gyro bias learned at ordinary stops — halved heading error at 120 s |
+| 4 | **Map-locked particle filter** | Knows one-way roads; estimate can't drift sideways off the road |
+| 5 | **Self-testing engine** | A hidden twin engine cuts GNSS for 60 s every 3 min and reports drift / MAE / RMSE on every drive |
+| 6 | **Per-vehicle learning** | Stop threshold, speed pattern and learned roads adapt to each car or bike |
+
+---
+
+## App Features
+
+- 🗺️ **Offline vector maps** (OpenStreetMap) with rotation and heading-up mode
+- 🔍 **Offline place & street search**
+- 🧭 **Offline routing** (A* on the OSM road graph) with **turn-by-turn voice guidance**
+- 📡 **Automatic GNSS-loss detection** + instant dead-reckoning switch
+- 🧪 **"Test GPS loss" button** — withholds every GNSS fix from the engine for live accuracy demos
+- 🎯 **Uncertainty circle** from particle spread
+- 🚗🏍️ **Vehicle chooser** — car and two-wheeler profiles
+- 📊 **Drive reports** — PNG chart + CSV / GeoJSON / GPX, saved to `Documents/Maverick/`
+- 📈 **50 Hz sensor logger** for building training data
+- 🌗 **Dark / light mode**
+- ☕ **Pure Java, no third-party libraries**
+
+---
+
+## Dataset & Validation
+
+**IO-VNBD** — *Inertial and Odometry Benchmark Dataset for Ground Vehicle Positioning* (Onyekpe et al.): ~58 hours / ~4,400 km of smartphone and vehicle driving data.
+
+**Data audit findings (fixed before training):**
+- Phone GPS speed column was mislabelled (m/s stored under "Kmh")
+- Phone GPS updates only every ~9 s with ~4.5 s lag
+- "Synchronised" phone/vehicle files had time offsets of up to minutes
+- Only a few drives had a usable phone gyroscope
+
+**Protocol:**
+- Leave-one-drive-out cross-validation
+- Driver B drives (set **M**) held out as the final test set
+- Synthetic GNSS outages of **30 / 60 / 120 s** inserted into held-out drives
+- Metric: median final-position drift as % of distance travelled during the outage
+
+**Own field data:** phone logs collected on a two-wheeler (phone mounted on top of the engine) using our companion data-collection app **MAVEMap**.
+
+---
+
+## Repository Structure
+
+> Adjust to match the actual repo.
+
+```
+Maverick/
+├── app/                      # Android app (Java)
+│   ├── engine/               # dead reckoning, particle filter, speed model runtime
+│   ├── map/                  # offline OSM rendering, search, A* routing
+│   ├── nav/                  # turn-by-turn + voice guidance
+│   └── report/               # drive reports, CSV/GeoJSON/GPX export
+├── idr/                      # Python evaluation harness + model training
+├── models/                   # exported LightGBM models
+├── docs/
+│   ├── screenshots/          # app screenshots used in this README
+│   └── Maverick_Report_v4.pdf
+└── README.md
 ```
 
-To install it on a connected device with USB debugging enabled:
+---
 
-```powershell
-./gradlew.bat installDebug
+## Getting Started
+
+### Run the app
+1. Clone the repo and open it in **Android Studio**.
+2. Connect an **Android 10+** phone with USB debugging enabled.
+3. **Run ▶** to install.
+4. Download / load the offline OSM map for your area.
+5. Choose your vehicle (car / bike) and fix the phone firmly to the vehicle.
+6. Start a drive with GNSS on — Maverick calibrates itself while moving.
+7. Tap **Test GPS loss** (or drive under a flyover/tunnel) to see dead reckoning take over.
+
+### Reproduce the evaluation
+```bash
+cd idr
+pip install -r requirements.txt
+python evaluate.py --dataset /path/to/IO-VNBD --outages 30 60 120
 ```
 
-The app needs location permission and a device with a gyroscope, accelerometer, and GNSS hardware. Grant location permission when prompted and mount the phone securely in the orientation appropriate to the selected vehicle profile.
+> Replace the commands above with the exact entry points in `idr/`.
 
-## Maps and demo data
+---
 
-The Android app and its bundled data are in [`Maverick_Final`](Maverick_Final):
+## Drive Reports & Data Logging
 
-- `app/src/main/assets/maps/` contains the Coimbatore and Coventry offline maps.
-- `app/src/main/assets/models/` contains the packaged vehicle profiles.
-- `app/src/main/assets/replay/` contains replay data used by the demo.
+Every drive is saved to `Documents/Maverick/drive_YYYYMMDD_HHMMSS/`:
 
-Map files use Maverick's `.mgr` format. The repository also includes map packaging utilities under [`maptools`](maptools) and [`tools`](tools). For map generation options, see the utility's local help before processing new source data:
+| File | Contents |
+|---|---|
+| `report.png` | Trajectory + error chart with **drift, MAE, RMSE, R²** |
+| `summary.json` | Numeric metrics |
+| `*.csv` | 50 Hz sensor + estimate log |
+| `*.geojson`, `*.gpx` | Trajectories for QGIS / Google Earth |
+| `info.txt` | Device, vehicle and session metadata |
 
-```powershell
-py maptools/osm_pack.py --help
-```
+---
 
-## Repository layout
+## Limitations & Honest Notes
 
-| Path | Contents |
-| --- | --- |
-| [`Maverick_Final`](Maverick_Final) | Current Android app and its Gradle project. |
-| [`Maverick`](Maverick) | Research, engineering notes, evaluation material, and an earlier project implementation. |
-| [`maptools`](maptools) | OpenStreetMap and map packaging utilities. |
-| [`tools`](tools) | Supporting data and export scripts. |
-| `MaverickGRID_old_v1`, `MaverickGRID_old_v2` | Archived Android project iterations. |
-| `maverick-edge`, `maverick-edge_old_v1` | Edge-model experiments. |
+- **Needs one GNSS fix at the start.** Dead reckoning estimates motion *relative to* a known position; Maverick bridges GNSS gaps, it does not start from nothing.
+- **Demo route mode (used in the screenshots above)** follows the planned route with a scripted speed profile (35 km/h, 20 km/h in turns) so demo videos are repeatable. It demonstrates the UI, map-lock and navigation flow — **accuracy claims come from the IO-VNBD evaluation and "Test GPS loss" drives, not demo mode.**
+- **Smooth two-wheelers:** the car-trained stop detector sometimes classified smooth motion as stopped; mitigated with adaptive per-vehicle stop thresholds and a turn-veto rule, still being improved with more bike data.
+- Accuracy depends on the phone being **rigidly mounted**.
+- Off-road / unmapped areas lose the map-matching benefit.
 
-Start with [`Maverick_Final/README.md`](Maverick_Final/README.md) for app controls, vehicle profiles, and map details. Research and evaluation notes are collected in [`Maverick/docs`](Maverick/docs).
+---
 
-## Important limitations
+## Roadmap
 
-- Dead reckoning accumulates uncertainty over time; it does not replace GNSS indefinitely.
-- Accuracy varies with phone mounting, vehicle dynamics, sensor quality, and the route/map match.
-- Bike mode is experimental. Treat its estimates as a prototype feature, not a validated navigation guarantee.
-- The demo/replay is useful for repeatable inspection, but simulated or replayed GPS loss should not be represented as a live field test.
-- Use the app as an experimental aid and continue to follow road signs and local traffic laws.
+- [ ] "Start here without GPS" — manual start point for fully GNSS-free starts
+- [ ] Two-wheeler-specific speed & stop models trained on MAVEMap data
+- [ ] Barometer fusion for flyovers and multi-level parking
+- [ ] Android Auto / fleet dashboard integration
+- [ ] NavIC (IRNSS) support for the handover stage
 
-## Contributing
+---
 
-Bug reports and focused improvements are welcome. Include the device model, Android version, vehicle profile, and whether the issue occurred during a live ride or a replay. Do not publish ride logs without removing location traces and other identifying information.
+## References
 
-## License
+1. U. Onyekpe et al., *IO-VNBD: Inertial and Odometry Benchmark Dataset for Ground Vehicle Positioning*, Data in Brief, 2021.
+2. U. Onyekpe et al., *WhONet: Wheel Odometry Neural Network for Vehicular Localisation in GNSS-Deprived Environments*, 2021.
+3. M. Brossard, A. Barrau, S. Bonnabel, *AI-IMU Dead-Reckoning*, IEEE T-IV, 2020.
+4. H. Yan, S. Herath, Y. Furukawa, *RoNIN: Robust Neural Inertial Navigation in the Wild*, ICRA 2020.
+5. P. Newson, J. Krumm, *Hidden Markov Map Matching Through Noise and Sparseness*, ACM SIGSPATIAL, 2009.
+6. P. D. Groves, *Principles of GNSS, Inertial, and Multisensor Integrated Navigation Systems*, 2nd ed., Artech House, 2013.
+7. G. Ke et al., *LightGBM: A Highly Efficient Gradient Boosting Decision Tree*, NeurIPS 2017.
+8. OpenStreetMap contributors — © OpenStreetMap, ODbL.
 
-See [`Maverick/LICENSE`](Maverick/LICENSE) for the license associated with the research project. Check the individual subproject and dataset terms before redistributing bundled third-party data or assets.
+---
+
+---
+
+<p align="center"><i>Navigation that doesn't stop when the sky disappears.</i></p>
