@@ -6,8 +6,8 @@
 
 <p align="center">
   <img src="images/reached.jpeg" width="260" alt="Turn-by-turn navigation during GNSS loss"/>
-  <img src="docs/screenshots/02_dr_junction_29s.jpg" width="260" alt="Dead reckoning 29 s into outage"/>
-  <img src="docs/screenshots/01_dr_on_route_1m54s.jpg" width="260" alt="Dead reckoning 1 min 54 s into outage"/>
+  <img src="images/ride.jpeg" width="260" alt="Dead reckoning 29 s into outage"/>
+  <img src="images/testing.jpg" width="260" alt="Dead reckoning 1 min 54 s into outage"/>
 </p>
 
 <p align="center">
