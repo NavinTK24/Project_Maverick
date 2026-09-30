@@ -85,7 +85,6 @@ Validated on **held-out drives** of the **IO-VNBD** dataset (leave-one-drive-out
 All screenshots below are from **real rides on the Kumaraguru College of Technology campus and Thudiyalur–Saravanampatty Road, Coimbatore**, with the phone's **Location switched off**.
 
 ### 1 · Turn-by-turn navigation with no GNSS
-<p align="center"><img src="images/testing.jpeg" width="320"/></p>
 
 | What you see | What it means |
 |---|---|
@@ -96,7 +95,6 @@ All screenshots below are from **real rides on the Kumaraguru College of Technol
 | Campus labels (MH 2–6, Campus Dining, F block, Admin Block) | Offline vector map with POIs, no internet |
 
 ### 2 · 29 seconds into GNSS loss — taking a junction
-<p align="center"><img src="images/ride.jpeg" width="320"/></p>
 
 | What you see | What it means |
 |---|---|
@@ -107,7 +105,6 @@ All screenshots below are from **real rides on the Kumaraguru College of Technol
 | **Uncertainty circle** | Particle spread — honest confidence of the estimate |
 
 ### 3 · 1 minute 54 seconds into GNSS loss — still on the road
-<p align="center"><img src="images/reached.jpeg" width="320"/></p>
 
 | What you see | What it means |
 |---|---|
