@@ -6,6 +6,14 @@ Maverick combines satellite positioning with phone motion sensors, dead reckonin
 
 > **Project status:** Maverick is an actively developed prototype. Dead-reckoning performance depends on the vehicle, phone placement, motion, and available map data. Demo/replay results are not a guarantee of real-world accuracy.
 
+## Screenshots
+
+<p align="center">
+	<img src="images/testing.jpeg" width="30%" alt="Turn guidance during demo dead reckoning without GPS">
+	<img src="images/ride.jpeg" width="30%" alt="Maverick showing on-route dead reckoning during a ride">
+	<img src="images/reached.jpeg" width="30%" alt="Navigation map continuing to show the route while GPS is unavailable">
+</p>
+
 ## What it does
 
 - **Continues through GPS loss:** uses the accelerometer and gyroscope to estimate motion while satellite fixes are unavailable.
